@@ -2,6 +2,29 @@ import React, {Component} from 'react';
 import "./App.css";
 
 export default class App extends Component {
+	// state 만들기
+	state = {
+		// 배열 선언
+		todoData :[
+			{
+				id:"1",
+				title: "공부하기",
+				completed: true
+			},
+			{
+				id:"2",
+				title: "청소하기",
+				completed: true
+			},
+			{
+				id:"3",
+				title: "요리하기",
+				completed: true
+			}
+		]
+	}
+
+
 	btnStyle ={
 		color: "#fff",
 		border: "none",
@@ -20,29 +43,13 @@ export default class App extends Component {
 		}
 	}
 
-	// 배열 선언
-	todoData = [
-		{
-			id:"1",
-			title: "공부하기",
-			completed: true
-		},
-		{
-			id:"2",
-			title: "청소하기",
-			completed: true
-		},
-		{
-			id:"3",
-			title: "요리하기",
-			completed: true
-		}
-	]
-
 	handleClick = (id) =>{
 		// filter 메소드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환해줌.
-		let newTodoList = this.todoData.filter(data => data.id !== id)
+		let newTodoList = this.state.todoData.filter(data => data.id !== id)
 		console.log(newTodoList)
+		this.setState({
+      todoData: newTodoList
+    });
 	}
   render() {
     return (
@@ -51,7 +58,7 @@ export default class App extends Component {
 			    <div className="title">
 				    <h1>할 일 목록</h1>
 			    </div>
-			    {this.todoData.map((data) =>(
+			    {this.state.todoData.map((data) =>(
 				    <div style={this.getStyle()} key={data.id}>
 					    <p>
 						    <input type="checkbox" defaultChecked={false} />
