@@ -5,23 +5,7 @@ export default class App extends Component {
 	// state 만들기
 	state = {
 		// 배열 선언
-		todoData :[
-			{
-				id:"1",
-				title: "공부하기",
-				completed: true
-			},
-			{
-				id:"2",
-				title: "청소하기",
-				completed: true
-			},
-			{
-				id:"3",
-				title: "요리하기",
-				completed: true
-			}
-		],
+		todoData :[],
 		value: ""
 	}
 
@@ -36,11 +20,11 @@ export default class App extends Component {
 	}
 
 	// 체크하면 선을 그어야 하기 때문에 동적으로 해야되서 함수로 만듬.
-	getStyle = () =>{
+	lifeStyle = (completed) => {
 		return {
 			padding: "10px",
 			borderBottom: "1px #ccc dotted",
-			textDecoration: "none",
+			textDecoration: completed ?  "line-through" : "none"
 		}
 	}
 
@@ -71,9 +55,20 @@ export default class App extends Component {
 		};
 
 		// 원래 있던 할 일에 새로운 할 일 더해주기
-		this.setState({todoData: [...this.state.todoData, newTodo]})
+		this.setState({todoData: [...this.state.todoData, newTodo], value:""})
 		console.log(newTodo)
 	}
+
+	handleCompleChange = (id) => {
+		let newTodoData = this.state.todoData.map((data) => {
+			if (data.id === id) {
+				data.completed = !data.completed;
+			}
+			return data
+		})
+		this.setState({todoData: newTodoData, value: ""})
+	}
+
   render() {
     return (
 	    <div className="container">
@@ -82,9 +77,9 @@ export default class App extends Component {
 				    <h1>할 일 목록</h1>
 			    </div>
 			    {this.state.todoData.map((data) =>(
-				    <div style={this.getStyle()} key={data.id}>
+				    <div style={this.lifeStyle(data.completed)} key={data.id}>
 					    <p>
-						    <input type="checkbox" defaultChecked={false} />
+						    <input type="checkbox" defaultChecked={false} onChange={()=> this.handleCompleChange(data.id)} />
 						    {"    "}{data.title}
 						    <button style={this.btnStyle} onClick={() => this.handleClick(data.id)}>x</button>
 					    </p>
