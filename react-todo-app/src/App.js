@@ -31,9 +31,19 @@ export default class App extends Component {
 			id:"2",
 			title: "청소하기",
 			completed: true
+		},
+		{
+			id:"3",
+			title: "요리하기",
+			completed: true
 		}
 	]
 
+	handleClick = (id) =>{
+		// filter 메소드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환해줌.
+		let newTodoList = this.todoData.filter(data => data.id !== id)
+		console.log(newTodoList)
+	}
   render() {
     return (
 	    <div className="container">
@@ -46,7 +56,7 @@ export default class App extends Component {
 					    <p>
 						    <input type="checkbox" defaultChecked={false} />
 						    {"    "}{data.title}
-						    <button style={this.btnStyle}>x</button>
+						    <button style={this.btnStyle} onClick={() => this.handleClick(data.id)}>x</button>
 					    </p>
 				    </div>
 			    ))}
