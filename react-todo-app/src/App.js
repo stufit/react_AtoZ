@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./App.css";
 import Lists from "./components/Lists";
 import Form from "./components/Form";
@@ -6,8 +6,28 @@ import Form from "./components/Form";
 export default function App() {
   console.log("앱 컴포넌트!");
   // state 만들기
-  const [todoData, setTodoData] = useState([]);
+  const [todoData, setTodoData] = useState([
+    {
+      id: "1",
+      title: "퇴근하기",
+      completed: true,
+    },
+    {
+      id: "2",
+      title: "아기토끼",
+      completed: false,
+    },
+  ]);
   const [value, setValue] = useState("");
+
+  const handleClick = useCallback(
+    (id) => {
+      let newTodoData = todoData.filter((data) => data.id !== id);
+      setTodoData(newTodoData);
+      localStorage.setItem("todoData", JSON.stringify(newTodoData));
+    },
+    [todoData]
+  );
 
   const handleSubmit = (e) => {
     // form 안에 input을 전송할 때 페이지가 리로드 되는 것을 막아준다.
