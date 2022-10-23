@@ -1,8 +1,24 @@
-import React from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState } from "react";
 
-const List = ({ todoData, setTodoData }) => {
-  const handleCompleChange = (id) => {
+const List = ({
+  id,
+  title,
+  completed,
+  todoData,
+  setTodoData,
+  provided,
+  snapshot,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(title);
+
+  const handleClick = (id) => {
+    let newTodoData = todoData.filter((data) => data.id !== id);
+    setTodoData(newTodoData);
+    localStorage.setItem("todoData", JSON.stringify(newTodoData));
+  };
+
+  const handleCompleteChange = (id) => {
     let newTodoData = todoData.map((data) => {
       if (data.id === id) {
         data.completed = !data.completed;
@@ -10,72 +26,92 @@ const List = ({ todoData, setTodoData }) => {
       return data;
     });
     setTodoData(newTodoData);
+    localStorage.setItem("todoData", JSON.stringify(newTodoData));
   };
 
-  const handleClick = (id) => {
-    // filter 메소드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환해줌.
-    let newTodoData = todoData.filter((data) => data.id !== id);
+  const handleEditChange = (e) => {
+    setEditedTitle(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    let newTodoData = todoData.map((data) => {
+      if (data.id === id) {
+        data.title = editedTitle;
+      }
+      return data;
+    });
     setTodoData(newTodoData);
+    localStorage.setItem("todoData", JSON.stringify(newTodoData));
+    setIsEditing(false);
   };
 
-  return (
-    <div>
-      <DragDropContext>
-        <Droppable droppableId={"todo"}>
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {todoData.map((data, index) => (
-                <Draggable
-                  key={data.id}
-                  draggable={data.id.toString()}
-                  index={index}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      key={data.id}
-                      {...provided.draggableProps}
-                      ref={provided.innerRef}
-                      {...provided.dragHandleProps}
-                      className={
-                        snapshot.isDragging ? "selected" : "not-selected"
-                      }
-                    >
-                      <div className="flex items-center justify-between w-full px-4 py-1 my-2 text-gray-600 bg-gray-100 rounded">
-                        <div className="items-center">
-                          <input
-                            type="checkbox"
-                            defaultChecked={false}
-                            onChange={() => handleCompleChange(data.id)}
-                          />
-                          {"    "}
-                          <span
-                            className={
-                              data.completed ? "line-through" : undefined
-                            }
-                          >
-                            {data.title}
-                          </span>
-                        </div>
-                        <div className="items-center">
-                          <button
-                            className={"px-4 py-2 float-right"}
-                            onClick={() => handleClick(data.id)}
-                          >
-                            x
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
-  );
+  if (isEditing) {
+    return (
+      <div className="flex items-center justify-between w-full px-4 py-1 my-1 text-gray-600 bg-gray-100 border rounded row">
+        <form onSubmit={handleSubmit}>
+          <input
+            className="w-full px-3 py-2 mr-4 text-gray-500 appearance-none"
+            value={editedTitle}
+            onChange={handleEditChange}
+            autoFocus
+          />
+        </form>
+        <div className="items-center">
+          <button
+            className="px-4 py-2 float-right"
+            onClick={() => setIsEditing(false)}
+            type="button"
+          >
+            x
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 float-right"
+            type="submit"
+          >
+            save
+          </button>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        key={id}
+        {...provided.draggableProps}
+        ref={provided.innerRef}
+        {...provided.dragHandleProps}
+        className={`${
+          snapshot.isDragging ? "bg-gray-400" : "bg-gray-100"
+        } flex items-center justify-between w-full px-4 py-1 my-2 text-gray-600 bg-gray-100 border rounded`}
+      >
+        <div className="items-center">
+          <input
+            type="checkbox"
+            onChange={() => handleCompleteChange(id)}
+            defaultChecked={completed}
+          />{" "}
+          <span className={completed ? "line-through" : undefined}>
+            {title}
+          </span>
+        </div>
+        <div className="items-center">
+          <button
+            className="float-right px-4 py-2"
+            onClick={() => handleClick(id)}
+          >
+            x
+          </button>
+          <button
+            className="float-right px-4 py-2"
+            onClick={() => setIsEditing(true)}
+          >
+            edit
+          </button>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default List;
