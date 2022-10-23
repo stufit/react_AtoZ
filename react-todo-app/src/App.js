@@ -4,6 +4,7 @@ import Lists from "./components/Lists";
 import Form from "./components/Form";
 
 export default function App() {
+  console.log("앱 컴포넌트!");
   // state 만들기
   const [todoData, setTodoData] = useState([]);
   const [value, setValue] = useState("");
