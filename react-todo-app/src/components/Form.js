@@ -2,7 +2,7 @@ import React from "react";
 
 const Form = ({ handleSubmit, value, setValue }) => {
   const handleChange = (e) => {
-    console.log("e", e.target.value);
+    console.log("폼 컴포넌트!", e.target.value);
     setValue(e.target.value);
   };
 

@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 
 const List = React.memo(
-  ({ id, title, completed, todoData, setTodoData, provided, snapshot }) => {
+  ({
+    id,
+    title,
+    completed,
+    todoData,
+    setTodoData,
+    provided,
+    snapshot,
+    handleClick,
+  }) => {
     console.log("리스트 컴포넌트!");
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
 
-    const handleClick = (id) => {
-      let newTodoData = todoData.filter((data) => data.id !== id);
-      setTodoData(newTodoData);
-      localStorage.setItem("todoData", JSON.stringify(newTodoData));
-    };
+    // const handleClick = (id) => {
+    //   let newTodoData = todoData.filter((data) => data.id !== id);
+    //   setTodoData(newTodoData);
+    //   localStorage.setItem("todoData", JSON.stringify(newTodoData));
+    // };
 
     const handleCompleteChange = (id) => {
       let newTodoData = todoData.map((data) => {

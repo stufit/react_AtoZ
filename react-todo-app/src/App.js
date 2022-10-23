@@ -44,6 +44,10 @@ export default function App() {
     setValue("");
   };
 
+  const handleRemoveClick = () => {
+    setTodoData([]);
+  };
+
   return (
     <div
       className={
@@ -53,8 +57,13 @@ export default function App() {
       <div className="w-full p-6 m-4 bg-white rounded shadow lg:w-3/4 lg:max-w-lg">
         <div className="flex justify-between mb-3">
           <h1>할 일 목록</h1>
+          <button onClick={handleRemoveClick}>목록모두삭제</button>
         </div>
-        <Lists todoData={todoData} setTodoData={setTodoData} />
+        <Lists
+          todoData={todoData}
+          setTodoData={setTodoData}
+          handleClick={handleClick}
+        />
         <Form handleSubmit={handleSubmit} value={value} setValue={setValue} />
       </div>
     </div>
